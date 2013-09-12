@@ -1,0 +1,12 @@
+{% load render_table from django_tables2 %}
+{% load staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static "site.css" %}" />
+        <link rel="stylesheet" href="{% static "leaguetable/units.css" %}" />
+    </head>
+    <body>
+        {% render_table units %}
+    </body>
+</html>
