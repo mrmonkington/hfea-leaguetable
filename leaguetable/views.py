@@ -1,5 +1,6 @@
 # Create your views here.
-from django.shortcuts import render
+from django.core.exceptions import *
+from django.shortcuts import render, redirect
 import hfeascrape.models
 import django_tables2 as tables
 
@@ -16,4 +17,13 @@ class LeagueTable(tables.Table):
         exclude = ('id','hfea_code')
 
 def units(request):
-    return render(request, "units.html", {"units": LeagueTable(hfeascrape.models.Unit.objects.all())})
+    sort = request.GET.get("sort")
+    try:
+        if sort:
+            league = hfeascrape.models.Unit.objects.all().order_by("-"+sort)
+        else:
+            league = hfeascrape.models.Unit.objects.all()
+        return render(request, "units.html", {"units": LeagueTable(league)})
+    except FieldError:
+        raise
+        return redirect(units)

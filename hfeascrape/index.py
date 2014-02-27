@@ -6,20 +6,22 @@ import csv
 GUIDE_ROOT_URL = "http://guide.hfea.gov.uk/guide/"
 CACHE_FOLDER = "/home/mark/tmp/cache/"
 
-def cached_soup( url, filename ):
+
+def cached_soup(url, filename):
     import codecs
     try:
-        with codecs.open( os.path.join(CACHE_FOLDER, filename), "r", "utf-8" ) as f:
-            bs = BeautifulSoup( f.read() )
+        with codecs.open(os.path.join(CACHE_FOLDER, filename), "r", "utf-8") as f:
+            bs = BeautifulSoup(f.read())
     except IOError:
         r = requests.get( url )
-        codecs.open( os.path.join(CACHE_FOLDER, filename), "w", "utf-8" ).write( r.text )
+        codecs.open( os.path.join(CACHE_FOLDER, filename), "w", "utf-8").write( r.text )
         bs = BeautifulSoup( r.text )
     return bs
 
+
 def index_clinics():
     clinics = {}
-    for index in "ABCDEFGHIJKLMNOPQRSTUVWXYZ": 
+    for index in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         logging.debug( index )
         bs = cached_soup(
             GUIDE_ROOT_URL + "AllClinics.aspx?x=%s" % (index, ),
@@ -28,7 +30,7 @@ def index_clinics():
         try:
             rows = bs.find_all("table", "results")[0].find_all("tr")
             for row in rows:
-                # ignore satellite clinics for now by only looking for treatment facilities 
+                # ignore satellite clinics for now by only looking for treatment facilities
                 if re.search("Treatment", row.text, re.I):
                     tel = re.search("tel:([0-9 ]+)", row.text, re.I)
                     if tel:
@@ -61,6 +63,7 @@ def get_clinic_data( code ):
     except TypeError:
         clinic[ "website" ] = ""
 
+
     def extract_count( t ):
         m = re.search(":\s*([0-9]+)\s*$", t)
         if m:
@@ -73,6 +76,7 @@ def get_clinic_data( code ):
     clinic.update( get_clinic_icsi_3year_data( code ) )
 
     return clinic
+
 
 def get_clinic_headline_data( code ):
     clinic = {}
@@ -94,12 +98,14 @@ def get_clinic_headline_data( code ):
     clinic[ "live_births_per_cycle" ] = float( clinic[ "overall_births" ] ) / float( clinic[ "overall_cycles" ] )
     return clinic
 
+
 def get_clinic_icsi_data( code ):
     clinic = {}
     bs = cached_soup(
         GUIDE_ROOT_URL + "CloserLook.aspx?code=%i&s=l&&nav=2&rate=i&rate_sub=FSO&bdy=2011&bda=b35&bds=FSO&bdt=icsi" % (code, ),
         "clinic_icsi_%i.html" % (code, )
     )
+
     def extract_count( t ):
         m = re.search("([0-9]+) out of ([0-9]+)", t)
         if m:
@@ -120,7 +126,8 @@ def get_clinic_icsi_3year_data( code ):
         GUIDE_ROOT_URL + "CloserLook.aspx?code=%i&s=l&&nav=2&rate=i&rate_sub=FSO&bdy=2999&bda=b35&bds=FSO&bdt=icsi" % (code, ),
         "clinic_icsi_3yr_%i.html" % (code, )
     )
-    def extract_count( t ):
+
+    def extract_count(t):
         m = re.search("([0-9]+) out of ([0-9]+)", t)
         if m:
             return ( int( m.group(1) ), int( m.group(2) ) )
@@ -160,9 +167,9 @@ def get_all_clinic_data():
             out_clinics.append( clinic )
         except (IndexError, AttributeError):
             logging.debug( "Not enough data" )
-    
+
     return out_clinics
-        
+
 
 #logging.debug( pprint.pformat( clinics ) )
 
