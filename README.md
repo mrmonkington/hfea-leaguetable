@@ -1,4 +1,4 @@
-# UK Fertility League
+# UK HFEA regulated fertility centre league table
 
 Scrapes the HFEA website and aggregates stats about the different providers of fertility treatment in the UK.
 
