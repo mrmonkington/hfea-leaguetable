@@ -13,18 +13,31 @@ Get as much qualified advice as you can, and don't listen to people on internet 
 
 ## Installation
 
-```
-cp fertilityleague/example_settings.py fertilityleague/settings.py
-```
-
-Edit the setting
+Set up.
 
 ```
 virtualenv env --no-site-packages
 env/bin/pip install -r requirements
-env/bin/python manage.py runserver
 ```
 
-Will make a temp folder in `~/tmp/cache`.
+Create settings (copy and edit example, though should work out of box).
 
+```
+cp fertilityleague/example_settings.py fertilityleague/settings.py
+```
+
+Run a scrape
+
+```
+env/bin/python manage.py scrape
+```
+
+(Will make a temp folder in `~/tmp/cache`.)
+
+
+Run the web app to view league table.
+
+```
+env/bin/python manage.py runserver
+```
 
