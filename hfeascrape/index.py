@@ -3,9 +3,14 @@ from bs4 import BeautifulSoup
 import logging
 import csv
 
-GUIDE_ROOT_URL = "http://guide.hfea.gov.uk/guide/"
-CACHE_FOLDER = "/home/mark/tmp/cache/"
+from os.path import expanduser
+HOME_DIR = expanduser("~")
 
+GUIDE_ROOT_URL = "http://guide.hfea.gov.uk/guide/"
+CACHE_FOLDER = os.path.join(HOME_DIR, "tmp/cache/")
+
+if not os.path.exists(CACHE_FOLDER):
+    os.makedirs(CACHE_FOLDER)
 
 def cached_soup(url, filename):
     import codecs
