@@ -1,2 +1,14 @@
 body {
+    font-family: sans;
+}
+
+table td, table th {
+    padding: 2px 4px;
+    vertical-align: top;
+    text-align: left;
+}
+
+thead tr th {
+}
+thead tr th a {
 }

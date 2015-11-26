@@ -5,10 +5,13 @@ from django.conf import settings
 from hfeascrape.models import *
 from hfeascrape.index import *
 
+import datetime
+
 class Command( BaseCommand ):
     
     def handle( self, *args, **options ):
         clinics = get_all_clinic_data()
+        date_fetched=datetime.datetime.now()
         for clinic in clinics:
             u, created = Unit.objects.get_or_create(
                 hfea_code = clinic["code"],
@@ -26,7 +29,8 @@ class Command( BaseCommand ):
                 icsi_births_3year = clinic["3year_icsi_births"],
                 icsi_embryos_3year = clinic["3year_icsi_embryos"],
                 icsi_cycles_3year = clinic["3year_icsi_cycles"],
-                tel = clinic["tel"]
+                tel = clinic["tel"],
+                last_updated = date_fetched
             )
             if created:
                 pass

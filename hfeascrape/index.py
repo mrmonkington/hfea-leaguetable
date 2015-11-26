@@ -110,6 +110,7 @@ def get_clinic_icsi_data( code ):
         m = re.search("([0-9]+) out of ([0-9]+)", t)
         if m:
             return ( int( m.group(1) ), int( m.group(2) ) )
+
     success_cycle = extract_count( bs.find( 'tr', id='ctl00_cph_tr_lb_c' ).find_all( "td" )[1].text )
     success_embryo = extract_count( bs.find( 'tr', id='ctl00_cph_tr_lb_et' ).find_all( "td" )[1].text )
     total_embryo = int( bs.find( 'tr', id='ctl00_cph_tr_etran' ).find_all( "td" )[1].text )
